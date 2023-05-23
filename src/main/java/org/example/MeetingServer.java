@@ -10,7 +10,7 @@ import java.io.File;
  */
 public class MeetingServer {
     public static void main(String[] args) throws Exception {
-        AudioFormat audioFormat = new AudioFormat(84100.0F, 16, 2, true, false);
+        AudioFormat audioFormat = new AudioFormat(44100.0F, 16, 2, true, false);
         DataLine.Info dataLineInfo = new DataLine.Info(TargetDataLine.class, audioFormat);
         TargetDataLine line = (TargetDataLine) AudioSystem.getLine(dataLineInfo);
         line.open(audioFormat);
