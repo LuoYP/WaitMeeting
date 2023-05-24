@@ -25,17 +25,17 @@
       <artifactId>hutool-all</artifactId>
       <version>5.8.18</version>
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>org.bytedeco</groupId>-->
-<!--      <artifactId>javacv-platform</artifactId>-->
-<!--      <version>1.4.1</version>-->
-<!--    </dependency>-->
+    <dependency>
+      <groupId>org.bytedeco</groupId>
+      <artifactId>javacv-platform</artifactId>
+      <version>1.4.1</version>
+    </dependency>
 
-<!--    <dependency>-->
-<!--      <groupId>org.bytedeco.javacpp-presets</groupId>-->
-<!--      <artifactId>opencv-platform</artifactId>-->
-<!--      <version>3.4.1-1.4.1</version>-->
-<!--    </dependency>-->
+    <dependency>
+      <groupId>org.bytedeco.javacpp-presets</groupId>
+      <artifactId>opencv-platform</artifactId>
+      <version>3.4.1-1.4.1</version>
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
