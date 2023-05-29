@@ -3,6 +3,7 @@ package org.example.schedule;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public class TimeWheel {
     private static final int DEFAULT_TICKS_PER_WHEEL = 60;
@@ -92,7 +93,7 @@ class TimeWheelTaskList implements Delayed{
         }
     }
 
-    public void flush(TaskConsumer consumer) {
+    public void flush(Consumer<TimeWheelTask> consumer) {
         TimeWheelTask task = head;
         while (task != null) {
             TimeWheelTask next = task.next;
@@ -174,8 +175,4 @@ class TimeWheelTask implements Delayed {
             task.run();
         }
     }
-}
-
-interface TaskConsumer {
-    void accept(TimeWheelTask task);
 }
