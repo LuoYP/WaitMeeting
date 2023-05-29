@@ -112,6 +112,7 @@ class TimeWheelTaskList implements Delayed{
                 }
             } else {
                 if (task.getDelay(TimeUnit.MILLISECONDS) <= 0) {
+                    task.run();
                     consumer.accept(task);
                 }
             }
