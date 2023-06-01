@@ -17,7 +17,7 @@ public class MeetingSquare {
         MEETING_SQUARE.remove(roomNumber);
     }
 
-    public MeetingRoom getMeetingRoom(String roomNumber) {
+    public static MeetingRoom getMeetingRoom(String roomNumber) {
         return MEETING_SQUARE.get(roomNumber);
     }
 }

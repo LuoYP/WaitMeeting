@@ -1,18 +1,32 @@
 package org.example.service;
 
+import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.RandomUtil;
+import org.example.common.annotation.Autowired;
 import org.example.common.annotation.RpcService;
+import org.example.common.context.Factory;
+import org.example.container.MeetingSession;
 import org.example.container.MeetingSquare;
 import org.example.room.MeetingRoom;
+import org.example.schedule.TimeWheel;
+import org.example.schedule.TimeWheelTask;
+import org.example.server.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @RpcService
 public class MeetingRoomService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(MeetingRoomService.class);
+
     private static final String BASE_RANDOM = "0123456789";
+
+    private final TimeWheel timeWheel = (TimeWheel) Factory.getBean(TimeWheel.class);
 
     /**
      * 创建会议室
@@ -25,10 +39,26 @@ public class MeetingRoomService {
         String roomNumber = generateRandomRoomNumber(3);
         MeetingRoom meetingRoom = MeetingRoom.build(roomNumber, masterName, meetingStartTime);
         if (meetingStartTime.isAfter(LocalDateTime.now())) {
+            TimeWheelTask noticeTask = new TimeWheelTask(LocalDateTimeUtil.toEpochMilli(meetingStartTime), () -> {
+                String ipaddress = MeetingSession.getAddress(masterName);
+                if (CharSequenceUtil.isBlank(ipaddress)) {
+                    LOGGER.error("the meeting master: {} not online", masterName);
+                    return;
+                }
 
+            });
+            timeWheel.addTask(noticeTask);
         }
         MeetingSquare.addMeeting(meetingRoom);
         return roomNumber;
+    }
+
+    public void joinRoom(String roomNumber, String username) {
+        MeetingRoom meetingRoom = MeetingSquare.getMeetingRoom(roomNumber);
+        if (Objects.isNull(meetingRoom)) {
+            throw new RuntimeException("meet number is illegal!");
+        }
+        meetingRoom.memberNames().add(username);
     }
 
     public String generateRandomRoomNumber(int partLength) {
