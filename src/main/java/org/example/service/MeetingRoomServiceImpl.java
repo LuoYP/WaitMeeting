@@ -1,18 +1,14 @@
 package org.example.service;
 
-import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.RandomUtil;
-import org.example.common.annotation.Autowired;
 import org.example.common.annotation.RpcService;
 import org.example.common.context.Factory;
-import org.example.container.MeetingSession;
+import org.example.communication.server.api.MeetingRoomService;
 import org.example.container.MeetingSquare;
 import org.example.room.MeetingRoom;
 import org.example.schedule.TimeWheel;
-import org.example.schedule.TimeWheelTask;
-import org.example.server.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,9 +16,9 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @RpcService
-public class MeetingRoomService {
+public class MeetingRoomServiceImpl implements MeetingRoomService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MeetingRoomService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MeetingRoomServiceImpl.class);
 
     private static final String BASE_RANDOM = "0123456789";
 
@@ -35,30 +31,21 @@ public class MeetingRoomService {
      * @param meetingStartTime 会议计划开始时间，如果是在当前时间之后的话，创建定时任务，定时通知客户端会议开始
      * @return roomNumber
      */
-    public String createMeetingRoom(String masterName, LocalDateTime meetingStartTime) {
+    @Override
+    public MeetingRoom createMeetingRoom(String masterName, LocalDateTime meetingStartTime) {
         String roomNumber = generateRandomRoomNumber(3);
         MeetingRoom meetingRoom = MeetingRoom.build(roomNumber, masterName, meetingStartTime);
-        if (meetingStartTime.isAfter(LocalDateTime.now())) {
-            TimeWheelTask noticeTask = new TimeWheelTask(LocalDateTimeUtil.toEpochMilli(meetingStartTime), () -> {
-                String ipaddress = MeetingSession.getAddress(masterName);
-                if (CharSequenceUtil.isBlank(ipaddress)) {
-                    LOGGER.error("the meeting master: {} not online", masterName);
-                    return;
-                }
-
-            });
-            timeWheel.addTask(noticeTask);
-        }
         MeetingSquare.addMeeting(meetingRoom);
-        return roomNumber;
+        return meetingRoom;
     }
 
-    public void joinRoom(String roomNumber, String username) {
+    @Override
+    public boolean joinRoom(String roomNumber, String username) {
         MeetingRoom meetingRoom = MeetingSquare.getMeetingRoom(roomNumber);
         if (Objects.isNull(meetingRoom)) {
             throw new RuntimeException("meet number is illegal!");
         }
-        meetingRoom.memberNames().add(username);
+        return meetingRoom.memberNames().add(username);
     }
 
     public String generateRandomRoomNumber(int partLength) {

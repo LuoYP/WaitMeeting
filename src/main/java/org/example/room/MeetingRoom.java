@@ -1,9 +1,10 @@
 package org.example.room;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-public class MeetingRoom {
+public class MeetingRoom implements Serializable {
 
     private String roomNumber;
 
