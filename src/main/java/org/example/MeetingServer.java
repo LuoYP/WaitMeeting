@@ -7,7 +7,7 @@ import org.example.server.annotation.RpcServerApplication;
 /**
  * WaitMeeting服务端
  */
-@RpcServerApplication(rpcApiPackages = "org/example/communication/client/api", protocols = {Protocol.TCP})
+@RpcServerApplication(rpcApiPackages = "org.example.communication.client.api", protocols = {Protocol.TCP})
 public class MeetingServer {
     public static void main(String[] args) throws Exception {
         RpcServer.run(MeetingServer.class);
