@@ -2,6 +2,7 @@ package org.example.room;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 public class MeetingRoom implements Serializable {
@@ -16,7 +17,7 @@ public class MeetingRoom implements Serializable {
 
     public static MeetingRoom build(String roomNumber, String masterName, LocalDateTime meetingStartTime) {
         return new MeetingRoom().setRoomNumber(roomNumber).setMasterName(masterName)
-                .setMeetingStartTime(meetingStartTime);
+                .setMeetingStartTime(meetingStartTime).setMemberNames(new HashSet<>());
     }
 
     public MeetingRoom join(String member) {
