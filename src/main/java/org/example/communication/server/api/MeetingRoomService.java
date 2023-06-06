@@ -8,7 +8,7 @@ public interface MeetingRoomService {
 
     MeetingRoom createMeetingRoom(String masterName, LocalDateTime meetingStartTime);
 
-    boolean joinRoom(String roomNumber, String username);
+    MeetingRoom joinRoom(String roomNumber, String username);
 
 
 }

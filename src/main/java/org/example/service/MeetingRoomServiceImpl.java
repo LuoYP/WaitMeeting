@@ -40,12 +40,13 @@ public class MeetingRoomServiceImpl implements MeetingRoomService {
     }
 
     @Override
-    public boolean joinRoom(String roomNumber, String username) {
+    public MeetingRoom joinRoom(String roomNumber, String username) {
         MeetingRoom meetingRoom = MeetingSquare.getMeetingRoom(roomNumber);
         if (Objects.isNull(meetingRoom)) {
             throw new RuntimeException("meet number is illegal!");
         }
-        return meetingRoom.memberNames().add(username);
+        meetingRoom.memberNames().add(username);
+        return meetingRoom;
     }
 
     public String generateRandomRoomNumber(int partLength) {
